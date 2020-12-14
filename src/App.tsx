@@ -1,24 +1,20 @@
-import React, { ChangeEvent, useEffect, useState } from 'react';
+import React, { ChangeEvent, useState } from 'react';
 import './App.css';
-import { Input, Divider, List, Button } from 'antd';
-import { CheckCircleTwoTone } from '@ant-design/icons';
+import { Input, Divider, Button } from 'antd';
+import Liste from './components/liste.component';
 
 function App() {
 
   const [elementAjoute, setElementAjoute] = useState('')
   const [liste, setListe] = useState<string[]>([])
 
-  useEffect(() => {
-    setListe(liste)
-  },[liste])
-
   const onChangeElementList = (event: ChangeEvent<HTMLInputElement>) => {
     setElementAjoute(event.currentTarget.value)
-
   }
 
   const handleClickAjouter = () => {
     setListe([...liste, elementAjoute])
+    setElementAjoute('')
   }
 
   const handleClickEffacer = () => {
@@ -28,20 +24,10 @@ function App() {
   return (
     <div className="App">
       <div style={{display: "flex"}}>
-        <Input size="large" placeholder="Ajouter à la liste" onChange={onChangeElementList}/>
+        <Input size="large" placeholder="Ajouter à la liste" value={elementAjoute} onChange={onChangeElementList}/>
         <Button size="large" type="primary" onClick={handleClickAjouter}>Ajouter</Button>
       </div>
-      <List
-        size="large"
-        header={<div>Ma liste</div>}
-        bordered
-        dataSource={liste}
-        renderItem={item => (
-          <List.Item>
-            <span>{item} <CheckCircleTwoTone twoToneColor="#52c41a" /></span>
-          </List.Item>
-        )}
-      />
+      <Liste liste={liste}/>
       <Divider orientation="center"/>
       <Button size="large" type="primary" onClick={handleClickEffacer}>Effacer la liste</Button>
       <Divider orientation="center"/>
