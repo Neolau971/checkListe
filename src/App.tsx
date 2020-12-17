@@ -1,12 +1,27 @@
-import React, { ChangeEvent, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import './App.css';
 import { Input, Divider, Button } from 'antd';
 import Liste from './components/liste.component';
 
 function App() {
 
+  const webLocalStorage = window.localStorage
+
   const [elementAjoute, setElementAjoute] = useState('')
   const [liste, setListe] = useState<string[]>([])
+
+  useEffect(() => {
+    const listeInDb = webLocalStorage.getItem('maListe')?.split(',')
+    if (listeInDb) {
+      setListe(listeInDb)
+    }
+  },[webLocalStorage])
+
+  useEffect(() => {
+    if (liste.length > 0) {
+      webLocalStorage.setItem('maListe', liste.toString())
+    }
+  },[liste, webLocalStorage])
 
   const onChangeElementList = (event: ChangeEvent<HTMLInputElement>) => {
     setElementAjoute(event.currentTarget.value)
@@ -19,6 +34,7 @@ function App() {
 
   const handleClickEffacer = () => {
     setListe([])
+    webLocalStorage.clear()
   }
 
   return (

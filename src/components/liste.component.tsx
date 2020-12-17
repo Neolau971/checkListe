@@ -10,7 +10,7 @@ const Liste: React.FC<ListeProps> = ({ liste }) => {
     return ( 
         <List
             size="large"
-            header={<div>Ma liste</div>}
+            header={<div style={{fontWeight: 'bold'}}>Ma liste</div>}
             bordered
             dataSource={liste}
             renderItem={item => (
