@@ -22,4 +22,4 @@ const Liste: React.FC<ListeProps> = ({ liste }) => {
     )
 }
 
-export default Liste
+export default React.memo(Liste);
