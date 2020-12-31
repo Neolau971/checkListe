@@ -1,9 +1,10 @@
 import React from "react"
 import { List } from "antd"
 import ItemListe from "./item.component"
+import { listeInterface } from "../interface/liste.inteface"
 
 type ListeProps = {
-    liste: string[]
+    liste: listeInterface[]
 }
 
 const Liste: React.FC<ListeProps> = ({ liste }) => {

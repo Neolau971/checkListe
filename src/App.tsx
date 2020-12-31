@@ -2,51 +2,52 @@ import React, { ChangeEvent, useEffect, useState } from 'react';
 import './App.css';
 import { Input, Divider, Button } from 'antd';
 import Liste from './components/liste.component';
+import { addElementListe, deleteAllListe, getAllListe } from './api/httpClient';
+import { listeInterface } from './interface/liste.inteface';
 
 function App() {
 
-  const webLocalStorage = window.localStorage
-
-  const [elementAjoute, setElementAjoute] = useState('')
-  const [liste, setListe] = useState<string[]>([])
+  const [elementAjoute, setElementAjoute] = useState<listeInterface>({elementListe: ''})
+  const [liste, setListe] = useState<listeInterface[]>([])
 
   useEffect(() => {
-    const listeInDb = webLocalStorage.getItem('maListe')?.split(',')
-    if (listeInDb) {
-      setListe(listeInDb)
-    }
-  },[webLocalStorage])
-
-  useEffect(() => {
-    if (liste.length > 0) {
-      webLocalStorage.setItem('maListe', liste.toString())
-    }
-  },[liste, webLocalStorage])
+    handleGetListeApi()
+  }, [])
 
   const onChangeElementList = (event: ChangeEvent<HTMLInputElement>) => {
-    setElementAjoute(event.currentTarget.value)
+    setElementAjoute({elementListe: event.currentTarget.value})
   }
 
   const handleClickAjouter = () => {
     setListe([...liste, elementAjoute])
-    setElementAjoute('')
+    handleUpdateListeApi(elementAjoute)
+    setElementAjoute({elementListe: ''})
   }
 
   const handleClickEffacer = () => {
     setListe([])
-    webLocalStorage.clear()
+    deleteAllListe()
+  }
+
+  const handleGetListeApi = async () => {
+    const res = await getAllListe();
+    setListe(res)
+  }
+
+  const handleUpdateListeApi = async (listeToSave: listeInterface) => {
+    addElementListe(listeToSave)
   }
 
   return (
     <div className="App">
-      <div style={{display: "flex"}}>
-        <Input size="large" placeholder="Ajouter à la liste" value={elementAjoute} onChange={onChangeElementList}/>
+       <div style={{display: "flex"}}>
+        <Input size="large" placeholder="Ajouter à la liste" value={elementAjoute.elementListe} onChange={onChangeElementList}/>
         <Button size="large" type="primary" onClick={handleClickAjouter}>Ajouter</Button>
       </div>
       <Liste liste={liste}/>
       <Divider orientation="center"/>
       <Button size="large" type="primary" onClick={handleClickEffacer}>Effacer la liste</Button>
-      <Divider orientation="center"/>
+      <Divider orientation="center"/> 
     </div>
   );
 }
